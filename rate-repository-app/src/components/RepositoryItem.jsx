@@ -1,30 +1,23 @@
 import React from "react";
+
 import { View, Image, StyleSheet } from "react-native";
+
 import Text from "./Text";
 import Maintheme from "../themes/MainTheme";
 
-const suffix = (num) => {
-  let numtoString = JSON.stringify(num);
-  let parseInt = parseFloat(numtoString);
-  let suffix = "";
-  if (parseInt < 1000) suffix = num;
-  if (parseInt >= 1000)
-    suffix = numtoString.slice(0, 1) + "." + numtoString.slice(1, 2) + "k";
-  if (parseInt >= 10000 && parseInt < 100000)
-    suffix = numtoString.slice(0, 2) + "." + numtoString.slice(2, 3) + "k";
-  if (parseInt >= 100000 && parseInt < 1000000)
-    suffix = numtoString.slice(0, 3) + "." + numtoString.slice(3, 4) + "k";
-  if (parseInt >= 1000000 && parseInt < 10000000)
-    suffix = numtoString.slice(0, 1) + "." + numtoString.slice(1, 2) + "m";
-
-  return suffix;
+const formatNumber = (num) => {
+  const numberFormatter = Intl.NumberFormat("en", { notation: "compact" });
+  return numberFormatter.format(num);
 };
 const styles = StyleSheet.create({
   mainContainer: {
     margin: 2,
     padding: 10,
-    backgroundColor: "#d7ebf7",
+    backgroundColor: "#fff",
     borderRadius: 10,
+    shadowColor: "#010101",
+    shadowRadius: 5,
+    elevation: 3,
   },
   flexboxHeader: {
     justifyContent: "flex-start",
@@ -42,7 +35,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   description: {
+    alignSelf: "flex-start",
+    textAlign: "left",
     marginVertical: 5,
+    paddingHorizontal: 5,
     fontWeight: Maintheme.fontWeights.normal,
     color: Maintheme.colors.textSecondary,
   },
@@ -55,6 +51,13 @@ const styles = StyleSheet.create({
   count: {
     fontWeight: Maintheme.fontWeights.bold,
     color: Maintheme.colors.textPrimary,
+    textShadowColor: "rgba(138, 138, 138, 0.3)",
+
+    textShadowRadius: 4,
+    textShadowOffset: {
+      width: -1,
+      height: 1,
+    },
   },
   boxContent: {
     alignItems: "center",
@@ -65,6 +68,13 @@ const styles = StyleSheet.create({
   textSecondary: {
     fontWeight: Maintheme.fontWeights.normal,
     color: Maintheme.colors.textSecondary,
+    textShadowColor: "rgba(138, 138, 138, 0.3)",
+
+    textShadowRadius: 4,
+    textShadowOffset: {
+      width: -1,
+      height: 1,
+    },
   },
   inlineBox: {
     padding: 10,
@@ -72,6 +82,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   language: {
+    fontWeight: Maintheme.fontWeights.bold,
     padding: 5,
     marginHorizontal: 5,
     position: "relative",
@@ -88,29 +99,33 @@ const Item = ({ content }) => (
   <View style={styles.mainContainer}>
     <View style={styles.flexboxHeader}>
       <Image style={styles.image} source={{ uri: content.ownerAvatarUrl }} />
-      <Text style={styles.title}>{content.fullName}</Text>
+      <Text style={styles.title}>{content.ownerName}</Text>
     </View>
     <View Style={styles.flexboxContent}>
-      <Text style={styles.description}> {content.description}</Text>
+      <Text style={styles.description}>{content.description}</Text>
       <Text style={[styles.description, styles.language]}>
         {content.language}
       </Text>
 
       <View style={styles.boxContent}>
         <View style={styles.inlineBox}>
-          <Text style={styles.count}>{suffix(content.forksCount)}</Text>
+          <Text style={styles.count}>{formatNumber(content.forksCount)}</Text>
           <Text style={styles.textSecondary}>Forks</Text>
         </View>
         <View style={styles.inlineBox}>
-          <Text style={styles.count}> {suffix(content.stargazersCount)}</Text>
+          <Text style={styles.count}>
+            {formatNumber(content.stargazersCount)}
+          </Text>
           <Text style={styles.textSecondary}>Stars</Text>
         </View>
         <View style={styles.inlineBox}>
-          <Text style={styles.count}> {suffix(content.reviewCount)}</Text>
+          <Text style={styles.count}> {formatNumber(content.reviewCount)}</Text>
           <Text style={styles.textSecondary}>Reviews</Text>
         </View>
         <View style={styles.inlineBox}>
-          <Text style={styles.count}> {suffix(content.ratingAverage)}</Text>
+          <Text style={styles.count}>
+            {formatNumber(content.ratingAverage)}
+          </Text>
           <Text style={styles.textSecondary}>Rating</Text>
         </View>
       </View>
