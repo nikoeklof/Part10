@@ -7,10 +7,10 @@ import {
   BackHandler,
 } from "react-native";
 import FormikTextInput from "./FormikTextInput";
-import { Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
 import * as yup from "yup";
-import useSignIn from "../hooks/useSignIn";
-import { useNavigate } from "react-router-native";
+import useCreateReview from "../hooks/useCreateReview";
+import { useNavigate, useLocation } from "react-router-native";
 import { useEffect } from "react";
 
 const styles = StyleSheet.create({
@@ -63,12 +63,19 @@ const styles = StyleSheet.create({
   },
 });
 const validationSchema = yup.object().shape({
-  username: yup.string().required("Username is required"),
-  password: yup.string().required("Password is required"),
+  rating: yup
+    .number()
+    .required("Rating is required")
+    .typeError("Rating must be a number between 1-100.")
+    .min(1, "Rating must be a number between 1-100")
+    .max(100, "Rating must be a number between 1-100"),
+
+  text: yup.string().required("Text is required"),
 });
 
-export const SignInForm = ({ onSubmit }) => {
-  const navigate = useNavigate("/");
+const ReviewForm = (props) => {
+  const repoValues = props.onSubmit.repoInfo;
+  const navigate = useNavigate();
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", handleBackPress);
     return () => {
@@ -76,62 +83,73 @@ export const SignInForm = ({ onSubmit }) => {
     };
   }, []);
   const handleBackPress = () => {
-    navigate("/");
+    navigate(`/${repoValues.repoId}`);
     return true;
   };
   return (
     <View style={styles.mainContainer}>
       <View style={styles.formContainer}>
-        <FormikTextInput name={"username"} placeholder="Username..." />
         <FormikTextInput
-          name={"password"}
-          placeholder="Password..."
-          secureTextEntry={true}
+          name={"rating"}
+          placeholder="Give rating in form of 1-100..."
         />
+        <FormikTextInput name={"text"} placeholder="Review text..." />
         <TouchableHighlight
           style={styles.submitButton}
-          onPress={onSubmit}
+          onPress={props.onSubmit.handleSubmit}
           activeOpacity={0.95}
           underlayColor="#004a9c"
         >
-          <Text style={styles.textPrimary}>Sign In</Text>
+          <Text style={styles.textPrimary}>Create review</Text>
         </TouchableHighlight>
       </View>
     </View>
   );
 };
 
-const SignIn = () => {
-  let navigate = useNavigate();
+const CreateReview = () => {
+  const repoInfo = useLocation().state;
+  const navigate = useNavigate();
+  const [createReview] = useCreateReview();
   const initialValues = {
-    username: "",
-    password: "",
+    rating: "",
+    text: "",
   };
-  const [signIn] = useSignIn();
-
   const onSubmit = async (values) => {
-    const { username, password } = values;
+    const { rating, text } = values;
 
     try {
-      const response = await signIn({ username, password });
+      const response = await createReview({
+        reviewData: {
+          repositoryName: repoInfo.repoName,
+          ownerName: repoInfo.ownerName,
+          rating: parseInt(rating),
+          text: text,
+        },
+      });
 
-      if (response !== false) {
-        navigate("/", { replace: true });
+      if (response.errors?.message) {
+        alert(response.errors?.message);
+        return;
       }
+      navigate(`/${repoInfo.repoId}`);
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={validationSchema}
-    >
-      {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
-    </Formik>
+    <View style={styles.mainContainer}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={validationSchema}
+      >
+        {({ handleSubmit }) => (
+          <ReviewForm onSubmit={{ handleSubmit, repoInfo }} />
+        )}
+      </Formik>
+    </View>
   );
 };
 
-export default SignIn;
+export default CreateReview;

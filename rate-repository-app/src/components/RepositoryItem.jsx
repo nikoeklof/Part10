@@ -1,7 +1,7 @@
 import React from "react";
 
-import { View, Image, StyleSheet } from "react-native";
-
+import { View, Image, StyleSheet, TouchableHighlight } from "react-native";
+import { useNavigate } from "react-router-native";
 import Text from "./Text";
 import Maintheme from "../themes/MainTheme";
 
@@ -11,7 +11,11 @@ const formatNumber = (num) => {
 };
 const styles = StyleSheet.create({
   mainContainer: {
-    margin: 2,
+    flex: 1,
+    width: "98%",
+    alignContent: "center",
+    justifyContent: "center",
+    alignSelf: "center",
     padding: 10,
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -76,6 +80,7 @@ const styles = StyleSheet.create({
       height: 1,
     },
   },
+
   inlineBox: {
     padding: 10,
     alignItems: "center",
@@ -93,45 +98,72 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     color: "white",
   },
+  touchable: {
+    borderRadius: 10,
+  },
 });
 
-const Item = ({ content }) => (
-  <View style={styles.mainContainer}>
-    <View style={styles.flexboxHeader}>
-      <Image style={styles.image} source={{ uri: content.ownerAvatarUrl }} />
-      <Text style={styles.title}>{content.ownerName}</Text>
-    </View>
-    <View Style={styles.flexboxContent}>
-      <Text style={styles.description}>{content.description}</Text>
-      <Text style={[styles.description, styles.language]}>
-        {content.language}
-      </Text>
+const Item = ({ content }) => {
+  const navigate = useNavigate();
 
-      <View style={styles.boxContent}>
-        <View style={styles.inlineBox}>
-          <Text style={styles.count}>{formatNumber(content.forksCount)}</Text>
-          <Text style={styles.textSecondary}>Forks</Text>
+  const navigateTo = (id) => {
+    navigate(`/${id}`);
+  };
+  return (
+    <TouchableHighlight
+      activeOpacity={0.94}
+      underlayColor="#DDDDDD"
+      onPress={() => {
+        navigateTo(content.id);
+      }}
+      style={styles.touchable}
+    >
+      <View style={styles.mainContainer}>
+        <View style={styles.flexboxHeader}>
+          <Image
+            style={styles.image}
+            source={{ uri: content.ownerAvatarUrl }}
+          />
+          <Text style={styles.title}>{content.fullName}</Text>
         </View>
-        <View style={styles.inlineBox}>
-          <Text style={styles.count}>
-            {formatNumber(content.stargazersCount)}
+        <View Style={styles.flexboxContent}>
+          <Text style={styles.description}>{content.description}</Text>
+          <Text style={[styles.description, styles.language]}>
+            {content.language}
           </Text>
-          <Text style={styles.textSecondary}>Stars</Text>
-        </View>
-        <View style={styles.inlineBox}>
-          <Text style={styles.count}> {formatNumber(content.reviewCount)}</Text>
-          <Text style={styles.textSecondary}>Reviews</Text>
-        </View>
-        <View style={styles.inlineBox}>
-          <Text style={styles.count}>
-            {formatNumber(content.ratingAverage)}
-          </Text>
-          <Text style={styles.textSecondary}>Rating</Text>
+
+          <View style={styles.boxContent}>
+            <View style={styles.inlineBox}>
+              <Text style={styles.count}>
+                {formatNumber(content.forksCount)}
+              </Text>
+              <Text style={styles.textSecondary}>Forks</Text>
+            </View>
+            <View style={styles.inlineBox}>
+              <Text style={styles.count}>
+                {formatNumber(content.stargazersCount)}
+              </Text>
+              <Text style={styles.textSecondary}>Stars</Text>
+            </View>
+            <View style={styles.inlineBox}>
+              <Text style={styles.count}>
+                {" "}
+                {formatNumber(content.reviewCount)}
+              </Text>
+              <Text style={styles.textSecondary}>Reviews</Text>
+            </View>
+            <View style={styles.inlineBox}>
+              <Text style={styles.count}>
+                {formatNumber(content.ratingAverage)}
+              </Text>
+              <Text style={styles.textSecondary}>Rating</Text>
+            </View>
+          </View>
         </View>
       </View>
-    </View>
-  </View>
-);
+    </TouchableHighlight>
+  );
+};
 
 const RepositoryItem = ({ item }) => <Item content={item} />;
 

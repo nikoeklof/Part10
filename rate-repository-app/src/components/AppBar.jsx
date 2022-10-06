@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 
 const AppBar = () => {
   const user = useQuery(GET_ME, { fetchPolicy: "cache-and-network" });
-  console.log(user.data?.me);
+
   if (user.data?.me) {
     return (
       <SafeAreaView style={styles.container}>

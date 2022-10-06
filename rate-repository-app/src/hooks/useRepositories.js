@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_REPOSITORIES } from "../grahql/queries";
 
@@ -8,7 +7,7 @@ const useRepositories = () => {
     nextFetchPolicy: "cache-first",
   });
   if (loading) return <h1>Loading...</h1>;
-
+  
   return data;
 };
 

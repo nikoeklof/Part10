@@ -12,5 +12,26 @@ export const SIGN_IN = gql`
     }
   }
 `;
+export const CREATE_REVIEW = gql`
+  mutation CreateReview($review: CreateReviewInput) {
+    createReview(review: $review) {
+      id
+      text
+      user {
+        username
+        id
+        createdAt
+      }
+      userId
+      repository {
+        ownerName
+        name
+        id
+      }
+      rating
+      createdAt
+    }
+  }
+`;
 
 export default { SIGN_IN };
