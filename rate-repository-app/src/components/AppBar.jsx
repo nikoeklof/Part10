@@ -78,6 +78,7 @@ const AppBar = () => {
       <ScrollView horizontal>
         <AppBarTab style={styles.barButton} text={"Repositories"} route={"/"} />
         <AppBarTab style={styles.barButton} text={"Sign in"} route={"SignIn"} />
+        <AppBarTab style={styles.barButton} text={"Sign up"} route={"SignUp"} />
       </ScrollView>
     </SafeAreaView>
   );
