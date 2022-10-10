@@ -10,17 +10,33 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryList = () => {
-  const { repositories } = useRepositories();
-
+const ReposityListContainer = ({ repositories, onEndReach }) => {
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
+
   return (
     <FlatList
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={RepositoryItem}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.25}
+    />
+  );
+};
+
+const RepositoryList = () => {
+  const { repositories, fetchMore } = useRepositories({
+    first: 6,
+  });
+  const onEndReach = () => {
+    fetchMore();
+  };
+  return (
+    <ReposityListContainer
+      repositories={repositories}
+      onEndReach={onEndReach}
     />
   );
 };

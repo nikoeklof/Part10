@@ -160,6 +160,8 @@ const Item = ({ content }) => {
   );
 };
 
-const RepositoryReview = ({ item }) => <Item content={item} />;
+const RepositoryReview = ({ item }) => {
+  return <Item content={item} />;
+};
 
 export default RepositoryReview;

@@ -20,14 +20,10 @@ const RepositoryInfo = (repository) => {
   return <RepositoryDetails content={repository} />;
 };
 const ItemSeparator = () => <View style={styles.separator} />;
-const RepositorySingle = () => {
-  let { repoId } = useParams();
-
+const RepositorySingleContainer = ({ onEndReach, reviews, repoId }) => {
   const repository = useRepository(repoId);
-  const reviews = useReviews(repoId);
-  const reviewNodes = reviews.repository
-    ? reviews.repository.reviews.edges.map((edge) => edge.node)
-    : [];
+
+  const reviewNodes = reviews ? reviews.edges.map((edge) => edge.node) : [];
 
   return (
     <View style={styles.backgroundlayer}>
@@ -36,10 +32,28 @@ const RepositorySingle = () => {
         ListHeaderComponent={RepositoryInfo(repository)}
         data={reviewNodes}
         ItemSeparatorComponent={ItemSeparator}
+        onEndReached={onEndReach}
+        onEndReachedThreshold={0.15}
         renderItem={RepositoryReview}
         ListEmptyComponent={RepositoryReview}
       />
     </View>
+  );
+};
+
+const RepositorySingle = () => {
+  let { repoId } = useParams();
+  const { reviews, fetchMore } = useReviews({ repositoryId: repoId, first: 4 });
+  const onEndReach = () => {
+    console.log("asd")
+    fetchMore();
+  };
+  return (
+    <RepositorySingleContainer
+      reviews={reviews}
+      onEndReach={onEndReach}
+      repoId={repoId}
+    />
   );
 };
 

@@ -1,17 +1,38 @@
 import { useQuery } from "@apollo/client";
 import { GET_REVIEWS } from "../grahql/queries";
 
-const useReviews = (id) => {
-  const { error, loading, data } = useQuery(GET_REVIEWS, {
+const useReviews = (variables) => {
+  const { error, loading, data, fetchMore, ...result } = useQuery(GET_REVIEWS, {
     fetchPolicy: "cache-and-network",
     nextFetchPolicy: "cache-first",
 
-    variables: { repositoryId: id },
+    variables,
   });
+  console.log(data);
 
-  if (loading) return loading;
+  const handleFetchMore = () => {
+    const canFetchMore =
+      !loading && data?.repository.reviews.pageInfo.hasNextPage;
 
-  return data;
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        first: 4,
+        after: data.repository.reviews.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
+
+  return {
+    reviews: data?.repository.reviews,
+    fetchMore: handleFetchMore,
+    loading,
+    ...result,
+  };
 };
 
 export default useReviews;
