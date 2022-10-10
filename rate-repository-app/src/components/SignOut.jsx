@@ -110,7 +110,6 @@ export const SignOut = () => {
           <TouchableHighlight
             style={[styles.button, styles.buttonYes]}
             onPress={() => {
-              console.log("yes");
               logOut(true);
             }}
             activeOpacity={0.95}
