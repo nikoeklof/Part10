@@ -8,7 +8,6 @@ const useReviews = (variables) => {
 
     variables,
   });
-  console.log(data);
 
   const handleFetchMore = () => {
     const canFetchMore =

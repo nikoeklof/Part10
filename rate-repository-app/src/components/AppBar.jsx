@@ -65,6 +65,11 @@ const AppBar = () => {
             text={"Sign out"}
             route={"SignOut"}
           />
+          <AppBarTab
+            style={styles.barButton}
+            text={"My Reviews"}
+            route={"UserReviews"}
+          />
         </ScrollView>
       </SafeAreaView>
     );

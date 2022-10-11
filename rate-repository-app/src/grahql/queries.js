@@ -93,5 +93,41 @@ export const GET_REVIEWS = gql`
     }
   }
 `;
+export const GET_USER_REVIEWS = gql`
+  query Query($first: Int, $after: String) {
+    me {
+      id
+      username
+      createdAt
+      reviewCount
+      reviews(first: $first, after: $after) {
+        totalCount
+        pageInfo {
+          hasPreviousPage
+          startCursor
+          hasNextPage
+          endCursor
+        }
+        edges {
+          cursor
+          node {
+            id
+            userId
+            repositoryId
+            rating
+            createdAt
+            text
+            repository {
+              url
+              fullName
+              ownerName
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
 export default { GET_REPOSITORIES };

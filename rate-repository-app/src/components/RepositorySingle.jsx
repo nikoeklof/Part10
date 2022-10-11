@@ -45,7 +45,7 @@ const RepositorySingle = () => {
   let { repoId } = useParams();
   const { reviews, fetchMore } = useReviews({ repositoryId: repoId, first: 4 });
   const onEndReach = () => {
-    console.log("asd")
+    
     fetchMore();
   };
   return (

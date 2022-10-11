@@ -70,26 +70,35 @@ const SignUp = () => {
     username: "",
     password: "",
   };
-  const [signUp] = useSignUp();
+  const [signUp, result] = useSignUp();
 
   const onSubmit = async (values) => {
     const { username, password } = values;
 
     try {
       const response = await signUp({ username, password });
+      if (!result.loading) {
+        if (result.error?.message) {
+          alert(result.error.message);
+          useNavigate("/");
+        }
+        alert(`User ${username} has been created!`);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={validationSchema}
-    >
-      {({ handleSubmit }) => <SignUpForm onSubmit={handleSubmit} />}
-    </Formik>
+    <>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={validationSchema}
+      >
+        {({ handleSubmit }) => <SignUpForm onSubmit={handleSubmit} />}
+      </Formik>
+    </>
   );
 };
 

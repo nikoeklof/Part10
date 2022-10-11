@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
   },
 });
 const Item = ({ content }) => {
+  console.log(content);
   if (content) {
     const date = new Date(content.createdAt);
     return (

@@ -17,7 +17,7 @@ const useCreateReview = () => {
       },
 
       onError: (error) => {
-        return error.message;
+        console.log(error.graphQLErrors[0].message);
       },
     });
 

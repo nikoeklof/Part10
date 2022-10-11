@@ -20,7 +20,6 @@ const useSignIn = () => {
 
     if (response.data) {
       const token = response.data?.authenticate?.accessToken;
-      console.log("new token", token);
 
       await authStorage.setAccessToken(token);
 

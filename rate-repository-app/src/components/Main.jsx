@@ -4,7 +4,7 @@ import RepositoryList from "./RepositoryList";
 import { Route, Routes } from "react-router-native";
 import SignIn from "./SignIn";
 import { SignOut } from "./SignOut";
-
+import UserReviews from "./UserReviews";
 import RepositorySingle from "./RepositorySingle";
 import CreateReview from "./CreateReview";
 import SignUp from "./SignUp";
@@ -32,6 +32,7 @@ const Main = () => {
         <Route path="/:repoId" element={<RepositorySingle />} />
         <Route path="/:repoId/review" element={<CreateReview />} />
         <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/UserReviews" element={<UserReviews />} />
       </Routes>
     </View>
   );
